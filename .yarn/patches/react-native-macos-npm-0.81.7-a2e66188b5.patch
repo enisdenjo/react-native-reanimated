@@ -1,9 +1,8 @@
 diff --git a/React/Base/macOS/RCTPlatformDisplayLink.m b/React/Base/macOS/RCTPlatformDisplayLink.m
+index 6ee09fde67a60082ac45764f6c66b7c4ca97e5b9..98b51ec43f74e307b55f2ae6454b33104225f830 100644
 --- a/React/Base/macOS/RCTPlatformDisplayLink.m
 +++ b/React/Base/macOS/RCTPlatformDisplayLink.m
-@@ -130,13 +130,9 @@
-   return !CVDisplayLinkIsRunning(_displayLink);
- }
+@@ -134,11 +134,7 @@ - (BOOL)isPaused
  
  - (NSTimeInterval)timestamp
  {

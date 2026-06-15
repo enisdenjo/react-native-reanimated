@@ -21,6 +21,23 @@ target 'MacOSExample-macOS' do
 
   post_install do |installer|
     react_native_post_install(installer)
+    # fmt 11.0.2 only disables `consteval` for Apple clang < 14, so Xcode 26+ (clang 21)
+    # turns it on and then rejects fmt's own FMT_STRING calls. Force the escape for all
+    # Apple clang (constexpr fallback). Drop once react-native-macos ships fmt >= 11.1.
+    # Upstream: https://github.com/fmtlib/fmt/issues/4740
+    # See also: https://github.com/software-mansion/react-native-executorch/issues/1081
+    fmt_base = File.join(__dir__, 'Pods', 'fmt', 'include', 'fmt', 'base.h')
+    if File.exist?(fmt_base)
+      original = File.read(fmt_base)
+      patched = original.sub(
+        '#elif defined(__apple_build_version__) && __apple_build_version__ < 14000029L',
+        '#elif defined(__apple_build_version__)'
+      )
+      unless patched == original
+        File.chmod(0644, fmt_base)
+        File.write(fmt_base, patched)
+      end
+    end
   end
 
   add_compile_metadata_step()
